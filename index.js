@@ -5,18 +5,34 @@ const app = express()
 const { MongoClient } = require('mongodb')
 
 const PORT = 3004
-const uri =
-  `mongodb+srv://${process.env.DB_USER}:<${process.env.DB_PASS}>@cluster0.mwk9e.mongodb.net/sample_training?retryWrites=true&w=majority`
-const client = new MongoClient(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-client.connect(err => {
-  const collection = client.db('test').collection('devices')
-  console.log(collection)
-  // perform actions on the collection object
-  client.close()
-})
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.mwk9e.mongodb.net/sample_training?retryWrites=true&w=majority`
+
+async function listDatabases(client){
+  databasesList = await client.db().admin().listDatabases();
+
+  console.log("Databases:");
+  databasesList.databases.forEach(db => console.log(` - ${db.name}`));
+};
+
+async function main () {
+  const client = new MongoClient(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  try {
+    // Connect to the MongoDB cluster
+    await client.connect()
+
+    // Make the appropriate DB calls
+    await listDatabases(client)
+  } catch (e) {
+    console.error(e)
+  } finally {
+    await client.close()
+  }
+}
+
+main().catch(console.error)
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
