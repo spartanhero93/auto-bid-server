@@ -3,36 +3,30 @@ const cors = require('cors')
 require('dotenv').config()
 const app = express()
 const { MongoClient } = require('mongodb')
-
-const PORT = 3004
+const mongoose = require('mongoose')
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.mwk9e.mongodb.net/sample_training?retryWrites=true&w=majority`
+const PORT = 3004
 
-async function listDatabases(client){
-  databasesList = await client.db().admin().listDatabases();
+const userSchema = require('./models/test.js')
+const User = mongoose.model('user', userSchema, 'user')
 
-  console.log("Databases:");
-  databasesList.databases.forEach(db => console.log(` - ${db.name}`));
-};
-
-async function main () {
-  const client = new MongoClient(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  })
+async function test () {
   try {
-    // Connect to the MongoDB cluster
-    await client.connect()
-
-    // Make the appropriate DB calls
-    await listDatabases(client)
-  } catch (e) {
-    console.error(e)
-  } finally {
-    await client.close()
+    mongoose.connect(uri)
+    const db = mongoose.connections
+    console.log(db)
+  } catch (error) {
+    console.log(error)
   }
 }
 
-main().catch(console.error)
+async function createUser() {
+  try {
+    const Luis = new User({ username: 'Luis', created: Date.now() })
+  } catch (error) {
+    
+  }
+}
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
