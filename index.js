@@ -4,28 +4,22 @@ require('dotenv').config()
 const app = express()
 const { MongoClient } = require('mongodb')
 const mongoose = require('mongoose')
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.mwk9e.mongodb.net/sample_training?retryWrites=true&w=majority`
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.mwk9e.mongodb.net/car_bid?retryWrites=true&w=majority`
 const PORT = 3004
 
 const userSchema = require('./models/test.js')
-const User = mongoose.model('user', userSchema, 'user')
+const User = mongoose.model('user', userSchema, 'current_cars')
 
-async function test () {
-  try {
-    mongoose.connect(uri)
-    const db = mongoose.connections
-    console.log(db)
-  } catch (error) {
-    console.log(error)
-  }
-}
 
-async function createUser() {
-  try {
-    const Luis = new User({ username: 'Luis', created: Date.now() })
-  } catch (error) {
-    
-  }
+main().catch(err => console.log(err));
+
+async function main() {
+  await mongoose.connect(uri)
+  const db = mongoose.connections
+
+  let Luis = new User({ username: 'Booby', created: Date.now()})
+  await Luis.save()
+  console.log(Luis)
 }
 
 app.use(express.json())
