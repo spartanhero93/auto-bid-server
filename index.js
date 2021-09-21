@@ -52,11 +52,7 @@ app.post('/search', (req, res) => {
 
 app.get('/explore', (req, res) => {
   console.log('user hit explore')
-  res.send({ data: DB })
-})
-
-app.get('/test', (req, res) => {
-  res.send({ data: 'Hello dude!' })
+  res.send({ data: CarBid.findOne({}) })
 })
 
 app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`))
