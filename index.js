@@ -7,9 +7,6 @@ const mongoose = require('mongoose')
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.mwk9e.mongodb.net/car_bid?retryWrites=true&w=majority`
 const PORT = 3004
 
-const userSchema = require('./models/test.js')
-const User = mongoose.model('user', userSchema, 'current_cars')
-
 const carBidSchema = require('./models/CarBid.js')
 const CarBid = mongoose.model('carBid', carBidSchema, 'current_cars')
 
