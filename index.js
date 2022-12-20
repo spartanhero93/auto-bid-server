@@ -12,6 +12,20 @@ app.use(cors())
 
 app.post('/search', (req, res) => {
   console.log('user hit search')
+  console.log(req.body)
+  
+  const foundItems = [];
+  DB.forEach(obj => {
+    for (const key in obj) {
+      if (obj.hasOwnProperty.call(obj, key)) {
+        const element = obj[key];
+        if(element === req.body.userInput){
+          foundItems.push(obj)
+        }
+      }
+    }
+  })
+  res.send({data: foundItems})
 })
 
 app.get('/explore', (req, res) => {
